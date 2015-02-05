@@ -2,6 +2,7 @@ var registerTask = require('../../lib/register-task');
 var getShipit = require('../../lib/get-shipit');
 var chalk = require('chalk');
 var sprintf = require('sprintf-js').sprintf;
+var path = require('path2/posix');
 
 /**
  * Create required directories for linked files and dirs.
@@ -14,10 +15,11 @@ module.exports = function (gruntOrShipit) {
 
   function task() {
     function createDirs(paths, remote, isFile) {
+      paths = paths || [.];
       isFile = isFile || false;
       var method = remote ? 'remote' : 'local';
-      var pathStr = paths.map(function(path) {
-        return isFile ? sprintf('$(dirname %s)', path) : path;
+      var pathStr = paths.map(function(curPath) {
+        return path.join(shipit.sharedPath, isFile ? sprintf('$(dirname %s)', curPath) : curPath);
       }).join(' ');
 
       return shipit[method](
@@ -26,6 +28,7 @@ module.exports = function (gruntOrShipit) {
     }
 
     shipit.log('Creating shared directories on remote.');
+    shipit.sharedPath = path.join(shipit.config.deployTo, 'shared');
 
     return createDirs(shipit.config.linkedDirs, true, false)
     .then(createDirs(shipit.config.linkedFiles, true, true))
