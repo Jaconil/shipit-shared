@@ -34,6 +34,7 @@ module.exports = function (gruntOrShipit) {
   }
 
   function linkDirs() {
+    shipit.config.linkedDirs = shipit.config.linkedDirs || [];
     var promises = shipit.config.linkedDirs.map(function(path) {
       link(path, false);
     });
@@ -46,6 +47,7 @@ module.exports = function (gruntOrShipit) {
   }
 
   function linkFiles() {
+    shipit.config.linkedFiles = shipit.config.linkedFiles || [];
     var promises = shipit.config.linkedFiles.map(function(path) {
       link(path, true);
     });

@@ -15,7 +15,7 @@ module.exports = function (gruntOrShipit) {
 
   function task() {
     function createDirs(paths, remote, isFile) {
-      paths = paths || [.];
+      paths = paths || ['.'];
       isFile = isFile || false;
       var method = remote ? 'remote' : 'local';
       var pathStr = paths.map(function(curPath) {
