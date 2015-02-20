@@ -26,7 +26,7 @@ module.exports = function (gruntOrShipit) {
     shipit.sharedPath = path.join(shipit.config.deployTo, 'shared');
 
     return shipit.remote(
-      sprintf('if [ -e %(source)s ]; then if ! [ -L %(target)s ]; then if [ %(targetTest)s %(target)s ]; then rm %(targetRmArgs)s %(target)s; fi; ln -s %(source)s %(target)s; fi; fi', {
+      sprintf('if [ -e %(source)s ]; then if ! [ -L %(target)s ]; then if [ %(targetTest)s %(target)s ]; then rm %(targetRmArgs)s %(target)s; fi; ln -s $(pwd)/%(source)s %(target)s; fi; fi', {
         source: path.join(shipit.sharedPath, filePath),
         target: path.join(shipit.currentPath, filePath),
         targetTest: isFile ? '-d' : '-f',
@@ -36,6 +36,7 @@ module.exports = function (gruntOrShipit) {
   }
 
   function linkDirs() {
+    shipit.config.linkedDirs = shipit.config.linkedDirs || [];
     var promises = shipit.config.linkedDirs.map(function(path) {
       link(path, false);
     });
@@ -48,6 +49,7 @@ module.exports = function (gruntOrShipit) {
   }
 
   function linkFiles() {
+    shipit.config.linkedFiles = shipit.config.linkedFiles || [];
     var promises = shipit.config.linkedFiles.map(function(path) {
       link(path, true);
     });
